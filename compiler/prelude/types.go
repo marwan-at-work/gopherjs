@@ -1,47 +1,46 @@
 package prelude
 
-const types = `
-var $kindBool = 1;
-var $kindInt = 2;
-var $kindInt8 = 3;
-var $kindInt16 = 4;
-var $kindInt32 = 5;
-var $kindInt64 = 6;
-var $kindUint = 7;
-var $kindUint8 = 8;
-var $kindUint16 = 9;
-var $kindUint32 = 10;
-var $kindUint64 = 11;
-var $kindUintptr = 12;
-var $kindFloat32 = 13;
-var $kindFloat64 = 14;
-var $kindComplex64 = 15;
-var $kindComplex128 = 16;
-var $kindArray = 17;
-var $kindChan = 18;
-var $kindFunc = 19;
-var $kindInterface = 20;
-var $kindMap = 21;
-var $kindPtr = 22;
-var $kindSlice = 23;
-var $kindString = 24;
-var $kindStruct = 25;
-var $kindUnsafePointer = 26;
+const types = `$global.$kindBool = $global.$kindBool || 1;
+$global.$kindInt = $global.$kindInt || 2;
+$global.$kindInt8 = $global.$kindInt8 || 3;
+$global.$kindInt16 = $global.$kindInt16 || 4;
+$global.$kindInt32 = $global.$kindInt32 || 5;
+$global.$kindInt64 = $global.$kindInt64 || 6;
+$global.$kindUint = $global.$kindUint || 7;
+$global.$kindUint8 = $global.$kindUint8 || 8;
+$global.$kindUint16 = $global.$kindUint16 || 9;
+$global.$kindUint32 = $global.$kindUint32 || 10;
+$global.$kindUint64 = $global.$kindUint64 || 11;
+$global.$kindUintptr = $global.$kindUintptr || 12;
+$global.$kindFloat32 = $global.$kindFloat32 || 13;
+$global.$kindFloat64 = $global.$kindFloat64 || 14;
+$global.$kindComplex64 = $global.$kindComplex64 || 15;
+$global.$kindComplex128 = $global.$kindComplex128 || 16;
+$global.$kindArray = $global.$kindArray || 17;
+$global.$kindChan = $global.$kindChan || 18;
+$global.$kindFunc = $global.$kindFunc || 19;
+$global.$kindInterface = $global.$kindInterface || 20;
+$global.$kindMap = $global.$kindMap || 21;
+$global.$kindPtr = $global.$kindPtr || 22;
+$global.$kindSlice = $global.$kindSlice || 23;
+$global.$kindString = $global.$kindString || 24;
+$global.$kindStruct = $global.$kindStruct || 25;
+$global.$kindUnsafePointer = $global.$kindUnsafePointer || 26;
 
-var $methodSynthesizers = [];
-var $addMethodSynthesizer = function(f) {
+$global.$methodSynthesizers = $global.$methodSynthesizers || [];
+$global.$addMethodSynthesizer = $global.$addMethodSynthesizer || function(f) {
   if ($methodSynthesizers === null) {
     f();
     return;
   }
   $methodSynthesizers.push(f);
 };
-var $synthesizeMethods = function() {
+$global.$synthesizeMethods = $global.$synthesizeMethods || function() {
   $methodSynthesizers.forEach(function(f) { f(); });
   $methodSynthesizers = null;
 };
 
-var $ifaceKeyFor = function(x) {
+$global.$ifaceKeyFor = $global.$ifaceKeyFor || function(x) {
   if (x === $ifaceNil) {
     return 'nil';
   }
@@ -49,11 +48,11 @@ var $ifaceKeyFor = function(x) {
   return c.string + '$' + c.keyFor(x.$val);
 };
 
-var $identity = function(x) { return x; };
+$global.$identity = $global.$identity || function(x) { return x; };
 
-var $typeIDCounter = 0;
+$global.$typeIDCounter = $global.$typeIDCounter || 0;
 
-var $idKey = function(x) {
+$global.$idKey = $global.$idKey || function(x) {
   if (x.$id === undefined) {
     $idCounter++;
     x.$id = $idCounter;
@@ -61,7 +60,7 @@ var $idKey = function(x) {
   return String(x.$id);
 };
 
-var $newType = function(size, kind, string, named, pkg, exported, constructor) {
+$global.$newType = $global.$newType || function(size, kind, string, named, pkg, exported, constructor) {
   var typ;
   switch(kind) {
   case $kindBool:
@@ -393,7 +392,7 @@ var $newType = function(size, kind, string, named, pkg, exported, constructor) {
   return typ;
 };
 
-var $methodSet = function(typ) {
+$global.$methodSet = $global.$methodSet || function(typ) {
   if (typ.methodSetCache !== null) {
     return typ.methodSetCache;
   }
@@ -459,26 +458,26 @@ var $methodSet = function(typ) {
   return typ.methodSetCache;
 };
 
-var $Bool          = $newType( 1, $kindBool,          "bool",           true, "", false, null);
-var $Int           = $newType( 4, $kindInt,           "int",            true, "", false, null);
-var $Int8          = $newType( 1, $kindInt8,          "int8",           true, "", false, null);
-var $Int16         = $newType( 2, $kindInt16,         "int16",          true, "", false, null);
-var $Int32         = $newType( 4, $kindInt32,         "int32",          true, "", false, null);
-var $Int64         = $newType( 8, $kindInt64,         "int64",          true, "", false, null);
-var $Uint          = $newType( 4, $kindUint,          "uint",           true, "", false, null);
-var $Uint8         = $newType( 1, $kindUint8,         "uint8",          true, "", false, null);
-var $Uint16        = $newType( 2, $kindUint16,        "uint16",         true, "", false, null);
-var $Uint32        = $newType( 4, $kindUint32,        "uint32",         true, "", false, null);
-var $Uint64        = $newType( 8, $kindUint64,        "uint64",         true, "", false, null);
-var $Uintptr       = $newType( 4, $kindUintptr,       "uintptr",        true, "", false, null);
-var $Float32       = $newType( 4, $kindFloat32,       "float32",        true, "", false, null);
-var $Float64       = $newType( 8, $kindFloat64,       "float64",        true, "", false, null);
-var $Complex64     = $newType( 8, $kindComplex64,     "complex64",      true, "", false, null);
-var $Complex128    = $newType(16, $kindComplex128,    "complex128",     true, "", false, null);
-var $String        = $newType( 8, $kindString,        "string",         true, "", false, null);
-var $UnsafePointer = $newType( 4, $kindUnsafePointer, "unsafe.Pointer", true, "", false, null);
+$global.$Bool          = $global.$Bool ||  $newType( 1, $kindBool,          "bool",           true, "", false, null);
+$global.$Int           = $global.$Int ||  $newType( 4, $kindInt,           "int",            true, "", false, null);
+$global.$Int8          = $global.$Int8 ||  $newType( 1, $kindInt8,          "int8",           true, "", false, null);
+$global.$Int16         = $global.$Int16 ||  $newType( 2, $kindInt16,         "int16",          true, "", false, null);
+$global.$Int32         = $global.$Int32 ||  $newType( 4, $kindInt32,         "int32",          true, "", false, null);
+$global.$Int64         = $global.$Int64 ||  $newType( 8, $kindInt64,         "int64",          true, "", false, null);
+$global.$Uint          = $global.$Uint ||  $newType( 4, $kindUint,          "uint",           true, "", false, null);
+$global.$Uint8         = $global.$Uint8 ||  $newType( 1, $kindUint8,         "uint8",          true, "", false, null);
+$global.$Uint16        = $global.$Uint16 ||  $newType( 2, $kindUint16,        "uint16",         true, "", false, null);
+$global.$Uint32        = $global.$Uint32 ||  $newType( 4, $kindUint32,        "uint32",         true, "", false, null);
+$global.$Uint64        = $global.$Uint64 ||  $newType( 8, $kindUint64,        "uint64",         true, "", false, null);
+$global.$Uintptr       = $global.$Uintptr ||  $newType( 4, $kindUintptr,       "uintptr",        true, "", false, null);
+$global.$Float32       = $global.$Float32 ||  $newType( 4, $kindFloat32,       "float32",        true, "", false, null);
+$global.$Float64       = $global.$Float64 ||  $newType( 8, $kindFloat64,       "float64",        true, "", false, null);
+$global.$Complex64     = $global.$Complex64 ||  $newType( 8, $kindComplex64,     "complex64",      true, "", false, null);
+$global.$Complex128    = $global.$Complex128 ||  $newType(16, $kindComplex128,    "complex128",     true, "", false, null);
+$global.$String        = $global.$String ||  $newType( 8, $kindString,        "string",         true, "", false, null);
+$global.$UnsafePointer = $global.$UnsafePointer ||  $newType( 4, $kindUnsafePointer, "unsafe.Pointer", true, "", false, null);
 
-var $nativeArray = function(elemKind) {
+$global.$nativeArray = $global.$nativeArray || function(elemKind) {
   switch (elemKind) {
   case $kindInt:
     return Int32Array;
@@ -506,15 +505,15 @@ var $nativeArray = function(elemKind) {
     return Array;
   }
 };
-var $toNativeArray = function(elemKind, array) {
+$global.$toNativeArray = $global.$toNativeArray || function(elemKind, array) {
   var nativeArray = $nativeArray(elemKind);
   if (nativeArray === Array) {
     return array;
   }
   return new nativeArray(array);
 };
-var $arrayTypes = {};
-var $arrayType = function(elem, len) {
+$global.$arrayTypes = $global.$arrayTypes || {};
+$global.$arrayType = $global.$arrayType || function(elem, len) {
   var typeKey = elem.id + "$" + len;
   var typ = $arrayTypes[typeKey];
   if (typ === undefined) {
@@ -525,7 +524,7 @@ var $arrayType = function(elem, len) {
   return typ;
 };
 
-var $chanType = function(elem, sendOnly, recvOnly) {
+$global.$chanType = $global.$chanType || function(elem, sendOnly, recvOnly) {
   var string = (recvOnly ? "<-" : "") + "chan" + (sendOnly ? "<- " : " ") + elem.string;
   var field = sendOnly ? "SendChan" : (recvOnly ? "RecvChan" : "Chan");
   var typ = elem[field];
@@ -536,7 +535,7 @@ var $chanType = function(elem, sendOnly, recvOnly) {
   }
   return typ;
 };
-var $Chan = function(elem, capacity) {
+$global.$Chan = $global.$Chan || function(elem, capacity) {
   if (capacity < 0 || capacity > 2147483647) {
     $throwRuntimeError("makechan: size out of range");
   }
@@ -547,11 +546,11 @@ var $Chan = function(elem, capacity) {
   this.$recvQueue = [];
   this.$closed = false;
 };
-var $chanNil = new $Chan(null, 0);
+$global.$chanNil = $global.$chanNil || new $Chan(null, 0);
 $chanNil.$sendQueue = $chanNil.$recvQueue = { length: 0, push: function() {}, shift: function() { return undefined; }, indexOf: function() { return -1; } };
 
-var $funcTypes = {};
-var $funcType = function(params, results, variadic) {
+$global.$funcTypes = $global.$funcTypes || {};
+$global.$funcType = $global.$funcType || function(params, results, variadic) {
   var typeKey = $mapArray(params, function(p) { return p.id; }).join(",") + "$" + $mapArray(results, function(r) { return r.id; }).join(",") + "$" + variadic;
   var typ = $funcTypes[typeKey];
   if (typ === undefined) {
@@ -572,8 +571,8 @@ var $funcType = function(params, results, variadic) {
   return typ;
 };
 
-var $interfaceTypes = {};
-var $interfaceType = function(methods) {
+$global.$interfaceTypes = $global.$interfaceTypes || {};
+$global.$interfaceType = $global.$interfaceType || function(methods) {
   var typeKey = $mapArray(methods, function(m) { return m.pkg + "," + m.name + "," + m.typ.id; }).join("$");
   var typ = $interfaceTypes[typeKey];
   if (typ === undefined) {
@@ -589,13 +588,13 @@ var $interfaceType = function(methods) {
   }
   return typ;
 };
-var $emptyInterface = $interfaceType([]);
-var $ifaceNil = {};
-var $error = $newType(8, $kindInterface, "error", true, "", false, null);
+$global.$emptyInterface = $global.$emptyInterface || $interfaceType([]);
+$global.$ifaceNil = $global.$ifaceNil || {};
+$global.$error = $global.$error || $newType(8, $kindInterface, "error", true, "", false, null);
 $error.init([{prop: "Error", name: "Error", pkg: "", typ: $funcType([], [$String], false)}]);
 
-var $mapTypes = {};
-var $mapType = function(key, elem) {
+$global.$mapTypes = $global.$mapTypes || {};
+$global.$mapType = $global.$mapType || function(key, elem) {
   var typeKey = key.id + "$" + elem.id;
   var typ = $mapTypes[typeKey];
   if (typ === undefined) {
@@ -605,7 +604,7 @@ var $mapType = function(key, elem) {
   }
   return typ;
 };
-var $makeMap = function(keyForFunc, entries) {
+$global.$makeMap = $global.$makeMap || function(keyForFunc, entries) {
   var m = {};
   for (var i = 0; i < entries.length; i++) {
     var e = entries[i];
@@ -614,7 +613,7 @@ var $makeMap = function(keyForFunc, entries) {
   return m;
 };
 
-var $ptrType = function(elem) {
+$global.$ptrType = $global.$ptrType || function(elem) {
   var typ = elem.ptr;
   if (typ === undefined) {
     typ = $newType(4, $kindPtr, "*" + elem.string, false, "", elem.exported, null);
@@ -624,19 +623,19 @@ var $ptrType = function(elem) {
   return typ;
 };
 
-var $newDataPointer = function(data, constructor) {
+$global.$newDataPointer = $global.$newDataPointer || function(data, constructor) {
   if (constructor.elem.kind === $kindStruct) {
     return data;
   }
   return new constructor(function() { return data; }, function(v) { data = v; });
 };
 
-var $indexPtr = function(array, index, constructor) {
+$global.$indexPtr = $global.$indexPtr || function(array, index, constructor) {
   array.$ptr = array.$ptr || {};
   return array.$ptr[index] || (array.$ptr[index] = new constructor(function() { return array[index]; }, function(v) { array[index] = v; }));
 };
 
-var $sliceType = function(elem) {
+$global.$sliceType = $global.$sliceType || function(elem) {
   var typ = elem.slice;
   if (typ === undefined) {
     typ = $newType(12, $kindSlice, "[]" + elem.string, false, "", false, null);
@@ -645,7 +644,7 @@ var $sliceType = function(elem) {
   }
   return typ;
 };
-var $makeSlice = function(typ, length, capacity) {
+$global.$makeSlice = $global.$makeSlice || function(typ, length, capacity) {
   capacity = capacity || length;
   if (length < 0 || length > 2147483647) {
     $throwRuntimeError("makeslice: len out of range");
@@ -664,8 +663,8 @@ var $makeSlice = function(typ, length, capacity) {
   return slice;
 };
 
-var $structTypes = {};
-var $structType = function(pkgPath, fields) {
+$global.$structTypes = $global.$structTypes || {};
+$global.$structType = $global.$structType || function(pkgPath, fields) {
   var typeKey = $mapArray(fields, function(f) { return f.name + "," + f.typ.id + "," + f.tag; }).join("$");
   var typ = $structTypes[typeKey];
   if (typ === undefined) {
@@ -689,7 +688,7 @@ var $structType = function(pkgPath, fields) {
   return typ;
 };
 
-var $assertType = function(value, type, returnTuple) {
+$global.$assertType = $global.$assertType || function(value, type, returnTuple) {
   var isInterface = (type.kind === $kindInterface), ok, missingMethod = "";
   if (value === $ifaceNil) {
     ok = false;
